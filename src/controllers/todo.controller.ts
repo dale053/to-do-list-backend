@@ -17,7 +17,7 @@ export const getTodos = async (req: Request, res: Response) => {
 export const addTodo = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user?.id;
-    const { title, desc, state = false } = req.body;
+    const { title, desc, state = false, deadline } = req.body;
     if (!userId) return res.status(401).json({ message: 'Unauthorized' });
     if (!title || !desc) {
       return res.status(400).json({ message: 'Title and description are required' });
@@ -26,7 +26,7 @@ export const addTodo = async (req: Request, res: Response) => {
     if (existing) {
       return res.status(400).json({ message: 'Todo with this title already exists' });
     }
-    const todo = new Todo({ title, desc, state, userId });
+    const todo = new Todo({ title, desc, state, deadline, userId });
     const saved = await todo.save();
     res.status(201).json(saved);
   } catch (error) {

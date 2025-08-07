@@ -4,6 +4,7 @@ export interface ITodo extends Document {
   title: string;
   desc: string;
   state: boolean;
+  deadline: Date | null;
   userId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -24,6 +25,10 @@ const todoSchema = new Schema<ITodo>(
     state: {
       type: Boolean,
       default: false,
+    },
+    deadline: {
+      type: Date,
+      default: null,
     },
     userId: {
       type: Schema.Types.ObjectId,
