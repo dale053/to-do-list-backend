@@ -63,3 +63,31 @@ export const deleteTodo = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error deleting todo' });
   }
 };
+
+// UPDATE todo for current user
+export const updateTodo = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { title, desc, state, deadline } = req.body;
+
+    if (!title && !desc && state === undefined && !deadline) {
+      return res.status(400).json({ message: 'No fields provided for update' });
+    }
+
+    const todo = await Todo.findById(id);
+    if (!todo) {
+      return res.status(404).json({ message: 'Todo not found' });
+    }
+
+    if (title !== undefined) todo.title = title;
+    if (desc !== undefined) todo.desc = desc;
+    if (state !== undefined) todo.state = state;
+    if (deadline !== undefined) todo.deadline = deadline;
+
+    const updated = await todo.save();
+    res.json(updated);
+  } catch (error) {
+    console.error('[Todo Update Error]', error);
+    res.status(500).json({ message: 'Error updating todo' });
+  }
+};
